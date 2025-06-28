@@ -1,0 +1,275 @@
+@layer base, utilities,demo;
+@import url(https://fonts.bunny.net/css?family=kodchasan:200,400,600) layer(demo);
+
+@layer demo {
+	section{
+			/* defaults */
+			--_offset-steps: 6rem; /* distance up */
+			--_scale-steps: 25;  /* scale behind*/
+			--_opacity-steps: 15; /* opacity behind */
+
+			--_ani-duration: 300ms; /* transition on card elements */
+			--_ani-delay: 200ms; /* delay on card elements (will be multiplied) */
+
+			/* calculations */
+			--_offset-steps-two: calc(var(--_offset-steps) * -1);
+			--_offset-steps-three: calc(var(--_offset-steps) * -2);
+
+			--scale-steps-two: calc(1 - var(--_scale-steps) * 0.01);
+			--scale-steps-three: calc(1 - var(--_scale-steps) * 0.02);
+
+			--opacity-steps-two: calc(1 - var(--_opacity-steps) * 0.02);
+			--opacity-steps-three: calc(1 - var(--_opacity-steps) * 0.04);
+		
+		@media (width > 600px){
+			--_offset-steps: 4em; /* distance up */
+		}
+
+			display: grid;
+			grid-template-areas: "stack";
+			color: black;
+			width: min(calc(100% - 2rem), 40rem);
+	}
+
+	article{
+			--_bg-alpha: .5;
+			--_border-radius: 10px;
+			--_bg-dot-offset: 20px;
+			--_bg-dot-color: var(--_bg-clr);
+	
+			position: relative;
+			isolation: isolate;
+			background-color: white;
+			grid-area:stack;
+			/*overflow: clip;*/
+			transition: 500ms ease-in-out;
+			border-radius: var(--_border-radius);
+
+			translate: 0 var(--_offset);
+			order: var(--_order);
+		z-index: var(--_order);
+			scale: var(--_scale);
+			opacity: var(--_opacity);
+			font-family: "Kodchasan", sans-serif;
+			
+			&::before,
+			&::after{
+				content: "";
+				position: absolute;
+				border-radius: inherit;
+				z-index: -1;
+			}
+			&::before {
+				z-index: -1;
+				inset: calc(var(--_bg-dot-offset) * -1);
+				background-image: radial-gradient(var(--_bg-dot-color) 1px, transparent 0px);
+				background-repeat: repeat;
+				background-size: 5px 5px; /* adjust the spacing between the dots */
+				background-position: center;
+				border-radius: calc(var(--_border-radius) + var(--_bg-dot-offset));
+			}
+		&::after{
+			background-color: white;
+				inset: 0;
+		}
+	
+	}
+	/* define each card styles - these custom properties will be updated according to which card is currently selected */
+	article:nth-of-type(1){
+			--_bg-clr: rgba(163, 230, 53,var(--_bg-alpha,1));
+			--_order:   var(--_1-order);
+			--_scale:   var(--_1-scale);
+			--_opacity: var(--_1-opacity);
+			--_offset:  var(--_1-offset);
+			--_pointer-event: var(--_1-pointer-event);
+			--_pointer-cursor: var(--_1-pointer-cursor);
+	}
+	article:nth-of-type(2){
+			--_bg-clr: rgba(251, 191, 36,var(--_bg-alpha,1));
+			--_order:   var(--_2-order);
+			--_scale:   var(--_2-scale);
+			--_opacity: var(--_2-opacity);
+			--_offset:  var(--_2-offset);
+			--_pointer-event: var(--_2-pointer-event);
+			--_pointer-cursor: var(--_2-pointer-cursor);
+	}
+	article:nth-of-type(3){
+			--_bg-clr: rgba(249, 168, 212,var(--_bg-alpha,1));
+			--_order:   var(--_3-order);
+			--_scale:   var(--_3-scale);
+			--_opacity: var(--_3-opacity);
+			--_offset:  var(--_3-offset);
+			--_pointer-event: var(--_3-pointer-event);
+			--_pointer-cursor: var(--_3-pointer-cursor);
+	}
+
+	section:has(input:nth-child(1):focus-visible) article:nth-of-type(1) label,
+	section:has(input:nth-child(2):focus-visible) article:nth-of-type(2) label,
+	section:has(input:nth-child(3):focus-visible) article:nth-of-type(3) label{
+		rotate: 90deg;
+	}
+
+	/* 1 checked */
+	section:has(input:nth-child(1):checked){
+			--_1-order: 3;
+			--_1-scale: 1;
+			--_1-opacity: 1
+			--_1-offset: 0; 
+			--_1-pointer-event: auto;
+			--_1-pointer-cursor: pointer;
+
+			--_2-order: 2;
+			--_2-scale: var(--scale-steps-two);
+			--_2-opacity: var(--opacity-steps-two);
+			--_2-offset: var(--_offset-steps-two); 
+
+			--_3-order: 1;
+			--_3-scale: var(--scale-steps-three);
+			--_3-opacity: var(--opacity-steps-three);
+			--_3-offset: var(--_offset-steps-three);  
+		
+		
+	}
+
+	/* 2 checked */
+	section:has(input:nth-child(2):checked){
+			--_2-order: 3;
+			--_2-scale: 1;
+			--_2-opacity: 1
+			--_2-offset: 1; 
+			--_2-pointer-event: auto;
+			--_2-pointer-cursor: pointer;
+
+			--_3-order: 2;
+			--_3-scale: var(--scale-steps-two);
+			--_3-opacity: var(--opacity-steps-two);
+			--_3-offset: var(--_offset-steps-two); 
+
+			--_1-order: 1;
+			--_1-scale: var(--scale-steps-three);
+			--_1-opacity: var(--opacity-steps-three);
+			--_1-offset: var(--_offset-steps-three);  
+	}
+	/* 3 checked */
+	section:has(input:nth-child(3):checked){
+			--_3-order: 3;
+			--_3-scale: 1;
+			--_3-opacity: 1
+			--_3-offset: 0; 
+			--_3-pointer-event: auto;
+			--_3-pointer-cursor: pointer;
+
+			--_1-order: 2;
+			--_1-scale: var(--scale-steps-two);
+			--_1-opacity: var(--opacity-steps-two);
+			--_1-offset: var(--_offset-steps-two); 
+
+			--_2-order: 1;
+			--_2-scale: var(--scale-steps-three);
+			--_2-opacity: var(--opacity-steps-three);
+			--_2-offset: var(--_offset-steps-three);  
+	}
+
+	article > header{
+			padding: .5rem 1rem;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			background-color: var(--_bg-clr);
+			transition: background-color var(--_ani-duration) ease-in-out;
+			border-radius: var(--_border-radius) var(--_border-radius) 0 0;
+	}
+	article > header > label{
+		padding: 0 1rem;
+			color: #333;
+			transition: rotate 300ms ease-in-out;    
+			pointer-events: var(--_pointer-event,none);
+			cursor: var(--_pointer-cursor, none);
+	}
+	article > header > label:hover{
+			rotate: 90deg;
+	}
+	article > header > h2 {
+			margin: 0;
+			font-weight: 500;
+			font-size: 1.1rem;
+			transition: translate var(--_ani-duration) ease-in-out, opacity var(--_ani-duration) ease-in-out;
+			transition-delay: var(--_delay-h2,0);
+			opacity: var(--_opacity,0);
+	}
+	article > div{
+		position: relative;
+		padding: 2rem;
+		display: grid;
+		grid-template-columns: 1fr;
+		place-items:start;
+		gap: 2rem;
+		@media (width > 600px){
+			grid-template-columns: 1fr 2fr;
+		}
+		
+	}
+	article img{
+		width: 100%;
+		height: 200px;
+		object-fit: cover;
+		transition:  var(--_ani-duration) ease-in-out;
+		opacity: var(--_opacity,0);
+
+	}
+	article .poem{
+		width: 100%;
+		height: 200px;
+		overflow-y: auto;
+	}
+	article p{
+			transition: var(--_ani-duration) ease-in-out;
+		  transition-delay: 500ms;
+			opacity: var(--_opacity,0);
+			margin: 0 0 1rem 0;
+			font-size: .9rem;
+	}
+}
+
+
+/* general styling not relevant for this demo */
+@layer base {
+	* {
+		box-sizing: border-box;
+	}
+	:root {
+		color-scheme: light dark;
+		--bg-dark: rgb(24, 24, 27);
+		--bg-light: rgb(229, 229, 229);
+
+		--txt-light: rgb(10, 10, 10);
+		--txt-dark: rgb(245, 245, 245);
+	}
+	body {
+		background-color: light-dark(var(--bg-light), var(--bg-dark));
+		color: light-dark(var(--txt-light), var(--txt-dark));
+		min-height: 100svh;
+		margin: 0;
+		padding: 2rem;
+		font-size: 1rem;
+		font-family: system-ui;
+		line-height: 1.5;
+		display: grid;
+		place-items: center;
+		gap: 2rem;
+	}
+}
+
+@layer utilities{
+	.sr-only {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			padding: 0;
+			margin: -1px;
+			overflow: hidden;
+			clip: rect(0, 0, 0, 0);
+			white-space: nowrap;
+			border-width: 0;
+	}
+}
